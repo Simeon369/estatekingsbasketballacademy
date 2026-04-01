@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --primary: #ee6730;
+  --dark: #000000;
+  --light: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-dark: var(--dark);
+  --color-light: var(--light);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-bebas);
+  --font-zen: var(--font-zen);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-bebas), Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+.font-heading {
+  font-family: var(--font-bebas), Arial, sans-serif;
+}
+
+.font-body {
+  font-family: var(--font-inter), Arial, sans-serif;
+}
+
+.font-zen {
+  font-family: var(--font-zen), Arial, sans-serif;
+}
