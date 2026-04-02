@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { IoBasketball, IoArrowForward } from "react-icons/io5";
@@ -8,46 +8,18 @@ import { programs } from "@/lib/constants";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 
-type Program = {
-  id: number;
-  title: string;
-  age_group: string;
-  description: string;
-  price: string | null;
-  features: string[];
-  featured: boolean;
-};
-
 export default function ProgramsPreview() {
-  const [dbPrograms, setDbPrograms] = useState<Program[] | null>(null);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch("/api/public/programs", { cache: "no-store" });
-        const data = (await res.json()) as { programs?: Program[] };
-        setDbPrograms(Array.isArray(data.programs) ? data.programs : []);
-      } catch {
-        setDbPrograms([]);
-      }
-    };
-    void load();
-  }, []);
-
   const program = useMemo(() => {
-    const fromDb = dbPrograms && dbPrograms.length ? dbPrograms[0] : null;
-    return (
-      fromDb ?? {
-        id: programs[0]?.id ?? 1,
-        title: programs[0]?.title ?? "Basketball Development",
-        age_group: programs[0]?.ageGroup ?? "Ages 4–18",
-        description: programs[0]?.description ?? "",
-        price: programs[0]?.price ?? null,
-        features: programs[0]?.features ?? [],
-        featured: Boolean(programs[0]?.featured),
-      }
-    );
-  }, [dbPrograms]);
+    const p = programs[0];
+    return {
+      id: p?.id ?? 1,
+      title: p?.title ?? "Basketball Development",
+      age_group: p?.ageGroup ?? "Ages 4–18",
+      description: p?.description ?? "",
+      price: p?.price ?? null,
+      features: p?.features ?? [],
+    };
+  }, []);
 
   return (
     <section className="py-24 bg-gray-50">
@@ -88,9 +60,7 @@ export default function ProgramsPreview() {
               ))}
             </ul>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <span className="text-lg text-gray-500">
-                Registration includes official academy jersey.
-              </span>
+              <span className="text-lg text-gray-500">Registration includes official academy jersey.</span>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-heading tracking-wider hover:bg-dark/90 transition-colors"

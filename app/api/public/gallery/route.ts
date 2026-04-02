@@ -5,7 +5,7 @@ export async function GET() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !anon) {
-    return NextResponse.json({ programs: [] });
+    return NextResponse.json({ items: [] });
   }
 
   const supabase = createClient(url, anon, {
@@ -13,11 +13,11 @@ export async function GET() {
   });
 
   const { data, error } = await supabase
-    .from("programs")
+    .from("gallery_items")
     .select("*")
+    .order("sort_order", { ascending: true })
     .order("id", { ascending: true });
 
-  if (error) return NextResponse.json({ programs: [] });
-  return NextResponse.json({ programs: data || [] });
+  if (error) return NextResponse.json({ items: [] });
+  return NextResponse.json({ items: data || [] });
 }
-

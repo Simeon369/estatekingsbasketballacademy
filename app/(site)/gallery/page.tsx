@@ -1,16 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { IoClose, IoChevronBack, IoChevronForward } from "react-icons/io5";
-import SectionHeading from "@/components/ui/SectionHeading";
 import { galleryImages } from "@/lib/constants";
 import { staggerContainer, staggerItem } from "@/lib/animations";
+import type { GalleryItemRow } from "@/lib/types/content";
+
+type SlideItem = { id: number; src: string; alt: string };
 
 export default function GalleryPage() {
+  const [dbItems, setDbItems] = useState<GalleryItemRow[] | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [direction, setDirection] = useState<1 | -1>(1);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/public/gallery", { cache: "no-store" });
+        const data = (await res.json()) as { items?: GalleryItemRow[] };
+        setDbItems(Array.isArray(data.items) ? data.items : []);
+      } catch {
+        setDbItems([]);
+      }
+    };
+    void load();
+  }, []);
+
+  const slides: SlideItem[] = useMemo(() => {
+    if (dbItems && dbItems.length > 0) {
+      return dbItems.map((item) => ({
+        id: item.id,
+        src: item.image_url,
+        alt: item.description || "Gallery image",
+      }));
+    }
+    return galleryImages.map((img) => ({
+      id: img.id,
+      src: img.src,
+      alt: img.alt,
+    }));
+  }, [dbItems]);
 
   const swipeConfidenceThreshold = 9000;
   const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
@@ -59,7 +90,7 @@ export default function GalleryPage() {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {galleryImages.map((img, index) => (
+            {slides.map((img, index) => (
               <motion.div
                 key={img.id}
                 variants={staggerItem}
@@ -67,16 +98,9 @@ export default function GalleryPage() {
                 onClick={() => setSelected(index)}
                 whileHover={{ scale: 1.02 }}
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover"
-                />
+                <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="(max-width:768px) 100vw, 25vw" />
                 <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/60 transition-colors flex items-center justify-center">
-                  <span className="text-white font-heading opacity-0 group-hover:opacity-100">
-                    View
-                  </span>
+                  <span className="text-white font-heading opacity-0 group-hover:opacity-100">View</span>
                 </div>
               </motion.div>
             ))}
@@ -84,26 +108,8 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {/* <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <SectionHeading title="Videos" subtitle="Watch our players in action" />
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12" variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            {[1, 2].map((v) => (
-              <motion.div key={v} variants={staggerItem} className="aspect-video bg-gray-200 rounded-2xl flex items-center justify-center">
-                <div className="text-center">
-                  <motion.div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                    <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </motion.div>
-                  <p className="font-heading">{v === 1 ? "Training Highlights" : "Game Day Moments"}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section> */}
-
       <AnimatePresence>
-        {selected !== null && (
+        {selected !== null && slides[selected] && (
           <motion.div
             className="fixed inset-0 z-50 bg-dark/95 flex items-center justify-center"
             initial={{ opacity: 0 }}
@@ -111,7 +117,7 @@ export default function GalleryPage() {
             exit={{ opacity: 0 }}
             onClick={() => setSelected(null)}
           >
-            <button className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center" onClick={() => setSelected(null)}>
+            <button className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center" onClick={() => setSelected(null)} aria-label="Close">
               <IoClose className="w-6 h-6 text-white" />
             </button>
             <button
@@ -119,8 +125,9 @@ export default function GalleryPage() {
               onClick={(e) => {
                 e.stopPropagation();
                 setDirection(-1);
-                setSelected(selected === 0 ? galleryImages.length - 1 : selected - 1);
+                setSelected(selected === 0 ? slides.length - 1 : selected - 1);
               }}
+              aria-label="Previous"
             >
               <IoChevronBack className="w-6 h-6 text-white" />
             </button>
@@ -129,8 +136,9 @@ export default function GalleryPage() {
               onClick={(e) => {
                 e.stopPropagation();
                 setDirection(1);
-                setSelected(selected === galleryImages.length - 1 ? 0 : selected + 1);
+                setSelected(selected === slides.length - 1 ? 0 : selected + 1);
               }}
+              aria-label="Next"
             >
               <IoChevronForward className="w-6 h-6 text-white" />
             </button>
@@ -156,21 +164,21 @@ export default function GalleryPage() {
                     if (swipe < -swipeConfidenceThreshold) {
                       setDirection(1);
                       setSelected((cur) =>
-                        cur === null ? null : cur === galleryImages.length - 1 ? 0 : cur + 1,
+                        cur === null ? null : cur === slides.length - 1 ? 0 : cur + 1,
                       );
                       return;
                     }
                     if (swipe > swipeConfidenceThreshold) {
                       setDirection(-1);
                       setSelected((cur) =>
-                        cur === null ? null : cur === 0 ? galleryImages.length - 1 : cur - 1,
+                        cur === null ? null : cur === 0 ? slides.length - 1 : cur - 1,
                       );
                     }
                   }}
                 >
                   <Image
-                    src={galleryImages[selected].src}
-                    alt={galleryImages[selected].alt}
+                    src={slides[selected].src}
+                    alt={slides[selected].alt}
                     fill
                     className="object-contain"
                     sizes="92vw"
@@ -178,7 +186,12 @@ export default function GalleryPage() {
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white font-heading">{selected + 1} / {galleryImages.length}</div>
+            <p className="absolute bottom-14 left-1/2 -translate-x-1/2 max-w-lg px-4 text-center text-sm text-white/90">
+              {slides[selected].alt}
+            </p>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white font-heading">
+              {selected + 1} / {slides.length}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -187,7 +200,9 @@ export default function GalleryPage() {
         <div className="container mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-4xl md:text-5xl font-heading text-white mb-6">Be Part of Our Story</h2>
-            <a href="/contact" className="inline-block px-8 py-4 bg-white text-primary font-heading text-lg tracking-wider hover:bg-gray-100 transition-colors">Join Today</a>
+            <a href="/contact" className="inline-block px-8 py-4 bg-white text-primary font-heading text-lg tracking-wider hover:bg-gray-100 transition-colors">
+              Join Today
+            </a>
           </motion.div>
         </div>
       </section>

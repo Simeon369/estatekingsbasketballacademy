@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Bebas_Neue, Zen_Dots } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import TopBar from "@/components/layout/TopBar";
-import Footer from "@/components/layout/Footer";
 import { siteConfig } from "@/lib/constants";
 
 const inter = Inter({
@@ -20,7 +17,6 @@ const bebasNeue = Bebas_Neue({
 const zenDots = Zen_Dots({
   weight: "400",
   variable: "--font-zen",
-  
 });
 
 export const metadata: Metadata = {
@@ -55,14 +51,12 @@ export const metadata: Metadata = {
     "estate kings basketball team",
     "estate kings basketball players",
     "estate kings basketball coach",
-    "estate kings basketball coach",
-    'best basketball academy in lagos',
-    'best basketball academy in nigeria',
-    'lagos basketball academy',
-    'nigeria basketball academy',
-    'basketball academy in lagos',
-    'basketball academy in nigeria',
-    'basketball academy in lagos',
+    "best basketball academy in lagos",
+    "best basketball academy in nigeria",
+    "lagos basketball academy",
+    "nigeria basketball academy",
+    "basketball academy in lagos",
+    "basketball academy in nigeria",
   ],
   icons: {
     icon: "/ball-of-basketball.svg",
@@ -110,10 +104,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${bebasNeue.variable} ${zenDots.variable} antialiased font-body`}
       >
-        <TopBar />
-        <main>{children}</main>
-        <Footer />
-        <Navbar />
+        {children}
       </body>
     </html>
   );

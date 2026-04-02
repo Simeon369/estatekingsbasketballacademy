@@ -1,72 +1,42 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { IoCalendar, IoTime, IoLocation } from "react-icons/io5";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import { schedule, upcomingEvents } from "@/lib/constants";
 import { staggerContainer, staggerItem } from "@/lib/animations";
-
-type SessionRow = {
-  id: number;
-  day: string;
-  time: string;
-  program: string;
-  sort_order: number;
-};
-
-type EventRow = {
-  id: number;
-  title: string;
-  date: string;
-  description: string;
-  sort_order: number;
-};
+import type { AnnouncementEventRow } from "@/lib/types/content";
 
 export default function SchedulePage() {
-  const [dbSessions, setDbSessions] = useState<SessionRow[] | null>(null);
-  const [dbEvents, setDbEvents] = useState<EventRow[] | null>(null);
+  const [dbEvents, setDbEvents] = useState<AnnouncementEventRow[] | null>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [sessionsRes, eventsRes] = await Promise.all([
-          fetch("/api/public/schedule", { cache: "no-store" }),
-          fetch("/api/public/events", { cache: "no-store" }),
-        ]);
-        const sessionsData = (await sessionsRes.json()) as { sessions?: SessionRow[] };
-        const eventsData = (await eventsRes.json()) as { events?: EventRow[] };
-        setDbSessions(Array.isArray(sessionsData.sessions) ? sessionsData.sessions : []);
+        const eventsRes = await fetch("/api/public/events", { cache: "no-store" });
+        const eventsData = (await eventsRes.json()) as { events?: AnnouncementEventRow[] };
         setDbEvents(Array.isArray(eventsData.events) ? eventsData.events : []);
       } catch {
-        setDbSessions([]);
         setDbEvents([]);
       }
     };
     void load();
   }, []);
 
-  const scheduleData = useMemo(() => {
-    if (dbSessions && dbSessions.length) {
-      const map = new Map<string, { day: string; sessions: { time: string; program: string }[] }>();
-      for (const s of dbSessions) {
-        if (!map.has(s.day)) map.set(s.day, { day: s.day, sessions: [] });
-        map.get(s.day)!.sessions.push({ time: s.time, program: s.program });
-      }
-      return Array.from(map.values());
-    }
-    return schedule;
-  }, [dbSessions]);
-
   const eventsData = useMemo(() => {
     if (dbEvents && dbEvents.length) return dbEvents;
     return upcomingEvents.map((e, i) => ({
       id: e.id,
       title: e.title,
-      date: e.date,
       description: e.description,
+      date: e.date,
       sort_order: i,
+      banner_url: null,
+      event_time: null,
+      location: null,
     }));
   }, [dbEvents]);
 
@@ -102,7 +72,7 @@ export default function SchedulePage() {
             viewport={{ once: true }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2 md:w-[70%] mx-auto gap-6">
-              {scheduleData.map((day) => (
+              {schedule.map((day) => (
                 <motion.div
                   key={day.day}
                   variants={staggerItem}
@@ -118,12 +88,8 @@ export default function SchedulePage() {
                         className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                       >
                         <div>
-                          <p className="font-heading text-dark">
-                            {session.program}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {session.time}
-                          </p>
+                          <p className="font-heading text-dark">{session.program}</p>
+                          <p className="text-sm text-gray-500">{session.time}</p>
                         </div>
                         <IoTime className="w-5 h-5 text-primary" />
                       </div>
@@ -155,31 +121,49 @@ export default function SchedulePage() {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {eventsData.map((event) => (
-                <motion.div
-                  key={event.id}
-                  variants={staggerItem}
-                  className="bg-white rounded-2xl overflow-hidden shadow-lg"
-                  whileHover={{ y: -8 }}
-                >
-                  <div className="bg-primary p-6">
-                    <div className="flex items-center gap-3 text-white">
-                      <IoCalendar className="w-6 h-6" />
-                      <span className="font-heading text-lg">{event.date}</span>
+              {eventsData.map((event) => {
+                const when = event.event_time || event.date || "";
+                const where = event.location || "";
+                return (
+                  <motion.div
+                    key={event.id}
+                    variants={staggerItem}
+                    className="bg-white rounded-2xl overflow-hidden shadow-lg flex flex-col"
+                  >
+                    <div className="relative h-44 w-full bg-gradient-to-br from-primary/80 to-slate-800">
+                      {event.banner_url ? (
+                        <Image
+                          src={event.banner_url}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          sizes="(max-width:768px) 100vw, 33vw"
+                        />
+                      ) : null}
                     </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-heading mb-3">{event.title}</h3>
-                    <p className="text-gray-600 mb-4">{event.description}</p>
-                    <a
-                      href="/contact"
-                      className="text-primary font-heading hover:underline"
-                    >
-                      Register Interest
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="flex items-center gap-2 text-primary mb-2">
+                        <IoCalendar className="w-5 h-5 shrink-0" />
+                        <span className="font-heading text-sm">{when || "Date TBA"}</span>
+                      </div>
+                      <h3 className="text-2xl font-heading mb-3">{event.title}</h3>
+                      <p className="text-gray-600 mb-4 flex-1">{event.description}</p>
+                      {where ? (
+                        <p className="text-sm text-gray-500 flex items-start gap-2">
+                          <IoLocation className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                          {where}
+                        </p>
+                      ) : null}
+                      <a
+                        href="/contact"
+                        className="mt-4 text-primary font-heading hover:underline inline-block"
+                      >
+                        Register Interest
+                      </a>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           )}
         </div>
