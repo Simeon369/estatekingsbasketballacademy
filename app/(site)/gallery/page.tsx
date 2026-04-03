@@ -38,7 +38,8 @@ export default function GalleryPage() {
   );
 
   const swipeConfidenceThreshold = 9000;
-  const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
+  const swipePower = (offset: number, velocity: number) =>
+    Math.abs(offset) * velocity;
 
   useEffect(() => {
     if (selected === null) return;
@@ -68,9 +69,18 @@ export default function GalleryPage() {
     <>
       <section className="pt-32 pb-16 bg-dark">
         <div className="container mx-auto px-4">
-          <motion.div className="text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-5xl md:text-7xl font-heading text-white mb-6">Photo <span className="text-primary">Gallery</span></h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">Moments captured at Estate Kings Basketball Academy</p>
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <TribalPatternStrip className="h-10 md:h-12 mb-8 opacity-90" />
+            <h1 className="text-5xl md:text-7xl font-heading text-white mb-6">
+              Photo <span className="text-primary">Gallery</span>
+            </h1>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Moments captured at Estate Kings Basketball Academy
+            </p>
           </motion.div>
         </div>
       </section>
@@ -125,7 +135,11 @@ export default function GalleryPage() {
             exit={{ opacity: 0 }}
             onClick={() => setSelected(null)}
           >
-            <button className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center" onClick={() => setSelected(null)} aria-label="Close">
+            <button
+              className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center"
+              onClick={() => setSelected(null)}
+              aria-label="Close"
+            >
               <IoClose className="w-6 h-6 text-white" />
             </button>
             <button
@@ -172,14 +186,22 @@ export default function GalleryPage() {
                     if (swipe < -swipeConfidenceThreshold) {
                       setDirection(1);
                       setSelected((cur) =>
-                        cur === null ? null : cur === slides.length - 1 ? 0 : cur + 1,
+                        cur === null
+                          ? null
+                          : cur === slides.length - 1
+                            ? 0
+                            : cur + 1,
                       );
                       return;
                     }
                     if (swipe > swipeConfidenceThreshold) {
                       setDirection(-1);
                       setSelected((cur) =>
-                        cur === null ? null : cur === 0 ? slides.length - 1 : cur - 1,
+                        cur === null
+                          ? null
+                          : cur === 0
+                            ? slides.length - 1
+                            : cur - 1,
                       );
                     }
                   }}
@@ -206,9 +228,18 @@ export default function GalleryPage() {
 
       <section className="py-24 bg-primary">
         <div className="container mx-auto px-4 text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-4xl md:text-5xl font-heading text-white mb-6">Be Part of Our Story</h2>
-            <a href="/contact" className="inline-block px-8 py-4 bg-white text-primary font-heading text-lg tracking-wider hover:bg-gray-100 transition-colors">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-heading text-white mb-6">
+              Be Part of Our Story
+            </h2>
+            <a
+              href="/contact"
+              className="inline-block px-8 py-4 bg-white text-primary font-heading text-lg tracking-wider hover:bg-gray-100 transition-colors"
+            >
               Join Today
             </a>
           </motion.div>

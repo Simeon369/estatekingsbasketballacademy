@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { IoBasketball, IoTrophy, IoFlash, IoPeople } from "react-icons/io5";
+import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import { coaches } from "@/lib/constants";
 import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
@@ -138,21 +139,10 @@ export default function AboutPage() {
 
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="mb-12 text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
-              Our Values
-            </h2>
-            <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
-              The principles that guide everything we do
-            </p>
-            <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
-          </motion.div>
+          <SectionHeading
+            title="Our Values"
+            subtitle="The principles that guide everything we do"
+          />
           <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
             variants={staggerContainer}
@@ -180,21 +170,10 @@ export default function AboutPage() {
 
       <section className="py-24">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="mb-12 text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
-              Meet Our Coaches
-            </h2>
-            <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
-              Expert coaches dedicated to your development
-            </p>
-            <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
-          </motion.div>
+          <SectionHeading
+            title="Meet Our Coaches"
+            subtitle="Expert coaches dedicated to your development"
+          />
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 md:w-[70%] mx-auto gap-12 mt-12"
             variants={staggerContainer}
@@ -224,9 +203,7 @@ export default function AboutPage() {
                     <p className="text-primary font-heading">{coach.role}</p>
                   </div>
                 </div>
-                <p className="text-gray-600 text-center text-sm md:text-base md:text-left">
-                  {coach.bio}
-                </p>
+                <p className="text-gray-600 text-center text-sm md:text-base md:text-left">{coach.bio}</p>
               </motion.div>
             ))}
           </motion.div>

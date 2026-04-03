@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { IoBasketball } from "react-icons/io5";
 import Button from "@/components/ui/Button";
+import TribalPatternStrip from "@/components/ui/TribalPatternStrip";
 import { siteConfig } from "@/lib/constants";
 
 export default function Hero() {
@@ -18,14 +19,20 @@ export default function Hero() {
       <motion.div
         className="hidden md:block absolute top-20 left-10 text-primary/20"
         animate={{ y: [0, -20, 0], rotate: [0, 360] }}
-        transition={{ y: { duration: 3, repeat: Infinity }, rotate: { duration: 8, repeat: Infinity, ease: "linear" } }}
+        transition={{
+          y: { duration: 3, repeat: Infinity },
+          rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+        }}
       >
         <IoBasketball className="w-24 h-24 md:w-32 md:h-32" />
       </motion.div>
       <motion.div
         className="hidden md:block absolute bottom-20 right-10 text-primary/20"
         animate={{ y: [0, 20, 0], rotate: [0, -360] }}
-        transition={{ y: { duration: 4, repeat: Infinity }, rotate: { duration: 10, repeat: Infinity, ease: "linear" } }}
+        transition={{
+          y: { duration: 4, repeat: Infinity },
+          rotate: { duration: 10, repeat: Infinity, ease: "linear" },
+        }}
       >
         <IoBasketball className="w-16 h-16 md:w-24 md:h-24" />
       </motion.div>
@@ -57,7 +64,7 @@ export default function Hero() {
           </span>
         </motion.div>
         {/* Simple title on mobile for readability */}
-      {/* <motion.h1
+        {/* <motion.h1
         className="md:hidden text-3xl xs:text-4xl font-heading text-white mb-4 leading-tight"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -75,7 +82,11 @@ export default function Hero() {
               className={`inline-block  ${word === "King" ? "text-primary mr-0" : "mr-4"}`}
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 + i * 0.1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{
+                delay: 0.3 + i * 0.1,
+                duration: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
             >
               {word}
             </motion.span>
@@ -87,9 +98,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
         >
-          <p className="text-gray-400 w-[80%]">
-            {siteConfig.description}
-          </p>
+          <p className="text-gray-400 w-[80%]">{siteConfig.description}</p>
           <p className="font-heading text-primary text-2xl">
             {siteConfig.tagline}
           </p>
@@ -100,8 +109,15 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
         >
-          <Button href="/contact" className="w-[60%] md:w-auto" size="lg">Join The Academy</Button>
-          <Button href="/schedule" className="w-[60%] md:w-auto" variant="outline" size="lg">
+          <Button href="/contact" className="w-[60%] md:w-auto" size="lg">
+            Join The Academy
+          </Button>
+          <Button
+            href="/schedule"
+            className="w-[60%] md:w-auto"
+            variant="outline"
+            size="lg"
+          >
             View Schedule
           </Button>
         </motion.div>

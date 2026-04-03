@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { IoBasketball, IoArrowForward } from "react-icons/io5";
 import { programs } from "@/lib/constants";
-import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function ProgramsPreview() {
   const program = useMemo(() => {
@@ -23,21 +24,10 @@ export default function ProgramsPreview() {
   return (
     <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-4">
-        <motion.div
-          className="mb-12 text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={fadeInUp}
-        >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
-            Basketball Development
-          </h2>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
-            One focused program for boys and girls ages 4–18
-          </p>
-          <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
-        </motion.div>
+        <SectionHeading
+          title="Basketball Development"
+          subtitle="One focused program for boys and girls ages 4–18"
+        />
         <motion.div
           className="max-w-4xl mx-auto mt-12"
           variants={staggerContainer}

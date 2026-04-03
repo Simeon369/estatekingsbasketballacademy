@@ -3,27 +3,17 @@
 import { motion } from "framer-motion";
 import { IoStar } from "react-icons/io5";
 import { testimonials } from "@/lib/constants";
-import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function Testimonials() {
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          className="mb-12 text-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={fadeInUp}
-        >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
-            What Parents Say
-          </h2>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
-            Hear from the families who have experienced the Estate Kings Basketball Academy difference
-          </p>
-          <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
-        </motion.div>
+        <SectionHeading
+          title="What Parents Say"
+          subtitle="Hear from the families who have experienced the Estate Kings Basketball Academy difference"
+        />
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
           variants={staggerContainer}
