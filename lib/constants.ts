@@ -93,23 +93,7 @@ export const schedule = [
   },
 ];
 
-export const upcomingEvents = [
-  { id: 1, title: "Spring Training Camp", date: "March 15-20, 2026", description: "Intensive week-long camp for all skill levels." },
-  { id: 2, title: "3v3 Tournament", date: "April 5, 2026", description: "Annual tournament open to all registered players." },
-  { id: 3, title: "College Showcase", date: "April 20, 2026", description: "Opportunity for seniors to play in front of college scouts." },
-];
 
-export const galleryImages = [
-  { id: 1, src: "/gallery1.jpg", alt: "Estate Kings training session" },
-  { id: 2, src: "/gallery2.jpg", alt: "Players working on fundamentals" },
-  { id: 3, src: "/gallery3.jpg", alt: "Game action at Estate Kings" },
-  { id: 4, src: "/gallery4.jpg", alt: "Team huddle and motivation" },
-  { id: 5, src: "/gallery5.jpg", alt: "Skills and shooting drills" },
-  { id: 6, src: "/gallery6.jpg", alt: "Youth players in development" },
-  { id: 7, src: "/gallery7.jpg", alt: "Outdoor court session" },
-  { id: 8, src: "/gallery8.jpg", alt: "Basketball clinic moments" },
-
-];
 
 export const sponsors = [
   { id: 1, name: "Giants of Africa", logo: "/goa.png" },

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { IoCalendar, IoTime, IoLocation } from "react-icons/io5";
-import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
 import { schedule } from "@/lib/constants";
-import { staggerContainer, staggerItem } from "@/lib/animations";
+import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
 import type { AnnouncementEventRow } from "@/lib/types/content";
 
 export default function SchedulePage() {
@@ -51,10 +51,21 @@ export default function SchedulePage() {
 
       <section className="py-24">
         <div className="container mx-auto px-4">
-          <SectionHeading
-            title="Training Schedule"
-            subtitle="Current Estate Kings Basketball Academy training days and times"
-          />
+          <motion.div
+            className="mb-12 text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
+              Training Schedule
+            </h2>
+            <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
+              Current Estate Kings Basketball Academy training days and times
+            </p>
+            <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
+          </motion.div>
           <motion.div
             className="mt-12"
             initial={{ opacity: 0 }}
@@ -97,10 +108,21 @@ export default function SchedulePage() {
 
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <SectionHeading
-            title="Upcoming Events"
-            subtitle="Special events and tournaments"
-          />
+          <motion.div
+            className="mb-12 text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={fadeInUp}
+          >
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading tracking-wide text-dark">
+              Upcoming Events
+            </h2>
+            <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
+              Special events and tournaments
+            </p>
+            <div className="mt-4 h-1 w-20 bg-primary mx-auto" />
+          </motion.div>
           {eventsData.length === 0 ? (
             <p className="mt-8 text-center text-gray-500">No upcoming events</p>
           ) : (
@@ -124,7 +146,7 @@ export default function SchedulePage() {
                       {event.banner_url ? (
                         <Image
                           src={event.banner_url}
-                          alt=""
+                          alt={event.title}
                           fill
                           className="object-cover"
                           sizes="(max-width:768px) 100vw, 33vw"
