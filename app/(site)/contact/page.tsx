@@ -61,7 +61,6 @@ export default function ContactPage() {
       <section className="pt-32 pb-16 bg-dark">
         <div className="container mx-auto px-4">
           <motion.div className="text-center" initial="hidden" animate="visible" variants={fadeInUp}>
-            <TribalPatternStrip className="h-10 md:h-12 mb-8 opacity-90" />
             <h1 className="text-5xl md:text-7xl font-heading text-white mb-6">Contact <span className="text-primary">Us</span></h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">Ready to start your basketball journey? Get in touch today.</p>
           </motion.div>

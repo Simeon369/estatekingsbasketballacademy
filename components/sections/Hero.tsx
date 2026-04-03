@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { IoBasketball } from "react-icons/io5";
 import Button from "@/components/ui/Button";
-import TribalPatternStrip from "@/components/ui/TribalPatternStrip";
 import { siteConfig } from "@/lib/constants";
 
 export default function Hero() {

@@ -74,7 +74,6 @@ export default function GalleryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <TribalPatternStrip className="h-10 md:h-12 mb-8 opacity-90" />
             <h1 className="text-5xl md:text-7xl font-heading text-white mb-6">
               Photo <span className="text-primary">Gallery</span>
             </h1>
