@@ -18,6 +18,11 @@ const remotePatterns = host
         hostname: host,
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https" as const,
+        hostname: host,
+        pathname: "/storage/v1/object/sign/**",
+      },
     ]
   : [];
 

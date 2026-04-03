@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import { IoClose, IoChevronBack, IoChevronForward } from "react-icons/io5";
-import { galleryImages } from "@/lib/constants";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import type { GalleryItemRow } from "@/lib/types/content";
 
@@ -28,20 +27,15 @@ export default function GalleryPage() {
     void load();
   }, []);
 
-  const slides: SlideItem[] = useMemo(() => {
-    if (dbItems && dbItems.length > 0) {
-      return dbItems.map((item) => ({
+  const slides: SlideItem[] = useMemo(
+    () =>
+      (dbItems || []).map((item) => ({
         id: item.id,
         src: item.image_url,
         alt: item.description || "Gallery image",
-      }));
-    }
-    return galleryImages.map((img) => ({
-      id: img.id,
-      src: img.src,
-      alt: img.alt,
-    }));
-  }, [dbItems]);
+      })),
+    [dbItems],
+  );
 
   const swipeConfidenceThreshold = 9000;
   const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
@@ -90,20 +84,34 @@ export default function GalleryPage() {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {slides.map((img, index) => (
-              <motion.div
-                key={img.id}
-                variants={staggerItem}
-                className="relative h-52 sm:h-64 md:h-56 lg:h-52 cursor-pointer rounded-xl overflow-hidden group"
-                onClick={() => setSelected(index)}
-                whileHover={{ scale: 1.02 }}
-              >
-                <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="(max-width:768px) 100vw, 25vw" />
-                <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/60 transition-colors flex items-center justify-center">
-                  <span className="text-white font-heading opacity-0 group-hover:opacity-100">View</span>
-                </div>
-              </motion.div>
-            ))}
+            {slides.length === 0 ? (
+              <p className="text-center text-gray-500 col-span-full">
+                No gallery images yet.
+              </p>
+            ) : (
+              slides.map((img, index) => (
+                <motion.div
+                  key={img.id}
+                  variants={staggerItem}
+                  className="relative h-52 sm:h-64 md:h-56 lg:h-52 cursor-pointer rounded-xl overflow-hidden group"
+                  onClick={() => setSelected(index)}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width:768px) 100vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/60 transition-colors flex items-center justify-center">
+                    <span className="text-white font-heading opacity-0 group-hover:opacity-100">
+                      View
+                    </span>
+                  </div>
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </div>
       </section>

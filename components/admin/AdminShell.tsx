@@ -20,9 +20,9 @@ export default function AdminShell({ title, subtitle, children }: AdminShellProp
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-40 border-b border-slate-200 bg-black">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 md:px-6">
-          <Link href="/admin" className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3">
             <Image
               src="/logo.png"
               alt="Estate Kings Basketball Academy"
@@ -36,7 +36,7 @@ export default function AdminShell({ title, subtitle, children }: AdminShellProp
           <button
             type="button"
             onClick={logout}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border text-white border-white-300 px-4 py-2 text-sm font-medium"
           >
             Logout
           </button>

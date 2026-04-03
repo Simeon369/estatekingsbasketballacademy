@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { requireAdminAuth } from "@/lib/admin/auth";
+import { toSignedOrRawUrl } from "@/lib/supabase/storageUrl";
 import type { GalleryItemRow } from "@/lib/types/content";
 
 export async function GET(req: Request) {
@@ -24,7 +25,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Failed to load gallery" }, { status: 500 });
   }
 
-  return NextResponse.json({ items: (data || []) as GalleryItemRow[] });
+  const items = await Promise.all(((data || []) as GalleryItemRow[]).map(async (item) => ({
+    ...item,
+    image_url: await toSignedOrRawUrl(supabase, item.image_url),
+  })));
+
+  return NextResponse.json({ items });
 }
 
 export async function POST(req: Request) {

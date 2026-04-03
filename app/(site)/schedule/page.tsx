@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { IoCalendar, IoTime, IoLocation } from "react-icons/io5";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Button from "@/components/ui/Button";
-import { schedule, upcomingEvents } from "@/lib/constants";
+import { schedule } from "@/lib/constants";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import type { AnnouncementEventRow } from "@/lib/types/content";
 
@@ -26,19 +25,10 @@ export default function SchedulePage() {
     void load();
   }, []);
 
-  const eventsData = useMemo(() => {
-    if (dbEvents && dbEvents.length) return dbEvents;
-    return upcomingEvents.map((e, i) => ({
-      id: e.id,
-      title: e.title,
-      description: e.description,
-      date: e.date,
-      sort_order: i,
-      banner_url: null,
-      event_time: null,
-      location: null,
-    }));
-  }, [dbEvents]);
+  const eventsData = useMemo(
+    () => (Array.isArray(dbEvents) ? dbEvents : []),
+    [dbEvents],
+  );
 
   return (
     <>

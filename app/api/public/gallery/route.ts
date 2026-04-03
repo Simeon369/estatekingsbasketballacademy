@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseServer } from "@/lib/supabase/server";
+import { toSignedOrRawUrl } from "@/lib/supabase/storageUrl";
 
 export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anon) {
+  const supabase = getSupabaseServer();
+  if (!supabase) {
     return NextResponse.json({ items: [] });
   }
-
-  const supabase = createClient(url, anon, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
 
   const { data, error } = await supabase
     .from("gallery_items")
@@ -19,5 +15,11 @@ export async function GET() {
     .order("id", { ascending: true });
 
   if (error) return NextResponse.json({ items: [] });
-  return NextResponse.json({ items: data || [] });
+
+  const items = await Promise.all((data || []).map(async (item) => ({
+    ...item,
+    image_url: await toSignedOrRawUrl(supabase, item.image_url),
+  })));
+
+  return NextResponse.json({ items });
 }
